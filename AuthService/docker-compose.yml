@@ -1,5 +1,10 @@
 services:
   db:
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - app-network
     image: postgres:15
@@ -17,7 +22,10 @@ services:
   auth-service:
     networks:
       - app-network
-    build: .
+    build:
+      context: .
+      args:
+        MAVEN_SKIP_TESTS: true
     ports:
       - "4005:4005"
     environment:

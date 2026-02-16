@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 
 INSERT INTO "users" (id, email, password, role)
 SELECT '223e4567-e89b-12d3-a456-426614174006', 'testuser@test.com',
-       '$2a$10$kMVMLx/WTlcVbTwI2cFXkuhQ71UPKqRIX0s/0LSk15nDbUxEnk8Le', 'ADMIN'
+       '$2a$10$Z1JQyoaHuEgi8Dg8/8jtb.7McigeyUshjAOhmViO3bc5iYZ7gdRVO', 'ADMIN'
 WHERE NOT EXISTS (
     SELECT 1
     FROM "users"

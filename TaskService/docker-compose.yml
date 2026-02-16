@@ -3,18 +3,19 @@ services:
     networks:
       - app-network
     image: postgres:15
-    container_name: postgres_db_auth
+    container_name: postgres_db_task
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:${DB_PORT}"
+    command: ["postgres", "-c", "port=5431"]
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  auth-service:
+  task-service:
     networks:
       - app-network
     build:
@@ -22,7 +23,7 @@ services:
       args:
         MAVEN_SKIP_TESTS: true
     ports:
-      - "4005:4005"
+      - "4004:4004"
     environment:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}

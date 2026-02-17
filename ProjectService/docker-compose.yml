@@ -1,5 +1,5 @@
 services:
-  task-db:
+  project-db:
     networks:
       - app-network
     image: postgres:15
@@ -15,7 +15,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  task-service:
+  project-service:
     networks:
       - app-network
     build:
@@ -33,7 +33,7 @@ services:
       - DB_CONTAINER_NAME=${DB_CONTAINER_NAME}
       - jwt.secret=${SECRET}
     depends_on:
-      - task-db
+      - project-db
 
 volumes:
   postgres_data:

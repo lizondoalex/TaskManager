@@ -1,4 +1,4 @@
-package com.pm.projectservice.util;
+package com.pm.userservice.util;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.*;

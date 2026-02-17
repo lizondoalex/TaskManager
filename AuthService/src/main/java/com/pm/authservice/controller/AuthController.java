@@ -6,6 +6,7 @@ import com.pm.authservice.dto.RegisterRequestDTO;
 import com.pm.authservice.dto.RegisterResponseDTO;
 import com.pm.authservice.exceptions.EmailAlreadyExistsException;
 import com.pm.authservice.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO){
 
         Optional<String> tokenOptional = authService.authenticate(loginRequestDTO);
 
@@ -35,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO registerRequestDTO){
+    public ResponseEntity<RegisterResponseDTO> register(@Valid @RequestBody RegisterRequestDTO registerRequestDTO){
 
         if(authService.validateEmail(registerRequestDTO.getEmail()))
             throw new EmailAlreadyExistsException("A member with this email already exists");

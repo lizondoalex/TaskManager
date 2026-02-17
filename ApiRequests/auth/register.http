@@ -4,10 +4,8 @@ POST http://localhost:4005/register
 Content-Type: application/json
 
 {
-  "name": "NameOfExample",
   "password": "testPassword12399",
-  "email": "testus@test.com",
-  "address": "123 main street",
+  "email": "testuser22@test.com",
   "dateOfBirth": "1995-10-10"
 }
 

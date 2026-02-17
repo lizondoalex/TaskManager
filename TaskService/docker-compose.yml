@@ -3,7 +3,7 @@ services:
     networks:
       - app-network
     image: postgres:15
-    container_name: postgres_db_task
+    container_name: ${DB_CONTAINER_NAME}
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - "${DB_PORT}:${DB_PORT}"
-    command: ["postgres", "-c", "port=5431"]
+    command: ["postgres", "-c", "port=${DB_PORT}"]
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -23,12 +23,14 @@ services:
       args:
         MAVEN_SKIP_TESTS: true
     ports:
-      - "4004:4004"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     environment:
+      - SERVER_PORT=${SERVER_PORT}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
       - DB_PORT=${DB_PORT}
+      - DB_CONTAINER_NAME=${DB_CONTAINER_NAME}
       - jwt.secret=${SECRET}
     depends_on:
       - db

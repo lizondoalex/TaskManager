@@ -5,6 +5,7 @@ import com.pm.authservice.exceptions.EmailAlreadyExistsException;
 import com.pm.authservice.model.User;
 import com.pm.authservice.util.JwtUtil;
 import com.pm.authservice.dto.LoginRequestDTO;
+import com.pm.authservice.util.RegisterResponse;
 import io.jsonwebtoken.JwtException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class AuthService {
         return user.isPresent();
     }
 
-    public Optional<String> register(RegisterRequestDTO registerRequestDTO){
+    public Optional<RegisterResponse> register(RegisterRequestDTO registerRequestDTO){
 
         if(validateEmail(registerRequestDTO.getEmail())){
             throw new EmailAlreadyExistsException("Email " + registerRequestDTO.getEmail() + " already exists");
@@ -63,8 +64,13 @@ public class AuthService {
         login.setEmail(registerRequestDTO.getEmail());
         login.setPassword(registerRequestDTO.getPassword());
 
-        return authenticate(login);
+        Optional<String> token = authenticate(login);
 
+        if(token.isEmpty()){
+            return Optional.empty();
+        }
+
+        return Optional.of(new RegisterResponse(newUser.getId(), token.get()));
     }
 
 }

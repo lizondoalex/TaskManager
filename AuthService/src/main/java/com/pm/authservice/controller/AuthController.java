@@ -1,11 +1,10 @@
 package com.pm.authservice.controller;
 
-import com.pm.authservice.dto.LoginRequestDTO;
-import com.pm.authservice.dto.LoginResponseDTO;
-import com.pm.authservice.dto.RegisterRequestDTO;
-import com.pm.authservice.dto.RegisterResponseDTO;
+import com.pm.authservice.dto.*;
 import com.pm.authservice.exceptions.EmailAlreadyExistsException;
 import com.pm.authservice.service.AuthService;
+import com.pm.authservice.util.RegisterResponse;
+import com.pm.authservice.util.UserRegistrationProducer;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +12,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 public class AuthController {
 
     private final AuthService authService;
+    private final UserRegistrationProducer userRegistrationProducer;
 
-    AuthController(AuthService authService){
+    AuthController(AuthService authService, UserRegistrationProducer userRegistrationProducer){
         this.authService = authService;
+        this.userRegistrationProducer = userRegistrationProducer;
     }
 
     @PostMapping("/login")
@@ -41,10 +43,22 @@ public class AuthController {
         if(authService.validateEmail(registerRequestDTO.getEmail()))
             throw new EmailAlreadyExistsException("A member with this email already exists");
 
-        Optional<String> optionalToken = authService.register(registerRequestDTO);
+        Optional<RegisterResponse> optionalRegisterResponse = authService.register(registerRequestDTO);
 
-        if (!optionalToken.isEmpty()) {
-            String token = optionalToken.get();
+        if (optionalRegisterResponse.isPresent()) {
+            RegisterResponse registerResponse = optionalRegisterResponse.get();
+            String token = registerResponse.getToken();
+            UUID id = registerResponse.getId();
+
+            KafkaRegisterDTO register = new KafkaRegisterDTO(
+                    id,
+                    registerRequestDTO.getEmail(),
+                    registerRequestDTO.getName(),
+                    registerRequestDTO.getAddress(),
+                    registerRequestDTO.getDateOfBirth()
+            );
+
+            userRegistrationProducer.sendUserRegistration(register);
 
             return ResponseEntity.ok(new RegisterResponseDTO(token));
         } else {

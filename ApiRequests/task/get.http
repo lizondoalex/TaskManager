@@ -1,5 +1,5 @@
 
 
 ### GET request to validate token
-GET http://localhost:4006/
+GET http://localhost:4006/user
 Authorization: Bearer {{token}}

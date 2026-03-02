@@ -15,6 +15,8 @@ public class KafkaRegisterDTO {
 
     private LocalDate dateOfBirth;
 
+    public KafkaRegisterDTO(){}
+
     public KafkaRegisterDTO(UUID id, String email, String name, String address, LocalDate dateOfBirth) {
         this.id = id;
         this.email = email;

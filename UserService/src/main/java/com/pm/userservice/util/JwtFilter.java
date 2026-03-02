@@ -32,14 +32,9 @@ public class JwtFilter implements Filter {
 
         try {
             jwtUtil.validateToken(token);
-
-            System.out.println("No me sirve filter2");
             filterChain.doFilter(servletRequest, servletResponse);
-
         } catch (JwtException ex) {
-            System.out.println("No me sirve filter");
             ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
         }
-        System.out.println("todo ha ido biem");
     }
 }

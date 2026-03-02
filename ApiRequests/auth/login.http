@@ -4,7 +4,7 @@ POST http://localhost:4005/login
 Content-Type: application/json
 
 {
-  "email": "testuser@test.com",
+  "email": "testuser9000@test.com",
   "password": "testPassword12399"
 }
 
